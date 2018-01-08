@@ -89,9 +89,8 @@ body {
       right: 0;
       bottom: 0;
       left: 0;
-      background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .15)), to(rgba(0, 0, 0, .25))), -webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(255, 255, 255, 0)), color-stop(0.5, rgba(255, 255, 255, .1)), color-stop(0.501, rgba(255, 255, 255, 0)), color-stop(1, rgba(255, 255, 255, 0)));
-      background: -moz-linear-gradient(top, rgba(255, 255, 255, .15), rgba(0, 0, 0, .25)), -moz-linear-gradient(left top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
-      background: linear-gradient(top, rgba(255, 255, 255, .15), rgba(0, 0, 0, .25)), linear-gradient(left top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
+      background: linear-gradient(to bottom, rgba(255, 255, 255, .15), rgba(0, 0, 0, .25)),
+      linear-gradient(left top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
     }
     .Scrubber-Progress {
       @include generate-gradient($orange);
@@ -168,15 +167,8 @@ body {
 }
 
 // Range Slider
-$rangeSlider: ".rangeSlider";
-$rangeSlider--horizontal: ".rangeSlider--horizontal";
-$rangeSlider--vertical: ".rangeSlider--vertical";
-$rangeSlider--disabled: ".rangeSlider--disabled";
-$rangeSlider--active: ".rangeSlider--active";
-$rangeSlider__fill: ".rangeSlider__fill";
-$rangeSlider__handle: ".rangeSlider__handle";
-#{$rangeSlider},
-#{$rangeSlider__fill} {
+.rangeSlider,
+.rangeSlider__fill{
   display: block;
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
@@ -197,41 +189,41 @@ $rangeSlider__handle: ".rangeSlider__handle";
   }
 }
 
-#{$rangeSlider} {
+.rangeSlider{
   background: #e6e6e6;
   position: relative;
 }
 
-#{$rangeSlider--horizontal} {
+.rangeSlider--horizontal{
   height: 5px;
   width: 100%;
 }
 
-#{$rangeSlider--vertical} {
+.rangeSlider--vertical{
   width: 20px;
   min-height: 150px;
   max-height: 100%;
   height: 100%;
 }
 
-#{$rangeSlider--disabled} {
+.rangeSlider--disabled{
   opacity: .4;
 }
 
-#{$rangeSlider__fill} {
+.rangeSlider__fill{
   background: #ff4700;
   transition: width 1s cubic-bezier(0.46, 0.03, 0.52, 0.96);
-  #{$rangeSlider--horizontal} & {
+  .rangeSlider--horizontal & {
     top: 0;
     height: 100%;
   }
-  #{$rangeSlider--vertical} & {
+  .rangeSlider--horizontal & {
     bottom: 0;
     width: 100%;
   }
 }
 
-#{$rangeSlider__handle} {
+.rangeSlider__handle{
   background: white;
   border: 1px solid #ccc;
   cursor: pointer;
@@ -258,19 +250,19 @@ $rangeSlider__handle: ".rangeSlider__handle";
     border-radius: 50%;
   }
   &:active,
-  #{$rangeSlider--active} & {
+  .rangeSlider--active & {
     background-image: linear-gradient(rgba(black, .10), rgba(black, .12));
   }
-  #{$rangeSlider--horizontal} & {
+  .rangeSlider--horizontal & {
     top: -7.5px;
     touch-action: pan-y;
   }
-  #{$rangeSlider--vertical} & {
+  .rangeSlider--vertical & {
     left: -5px;
     touch-action: pan-x;
   }
 }
 
-input[type="range"]:focus+#{$rangeSlider} #{$rangeSlider__handle} {
+input[type="range"]:focus+ .rangeSlider .rangeSlider__handle {
   box-shadow: 0 0 8px rgba(#ff00ff, .9);
 }
