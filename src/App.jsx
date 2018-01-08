@@ -1,18 +1,81 @@
 import React, { Component } from 'react';
 import './scss/style.scss';
-
+const track = [
+  {
+    id: 1,
+    name: "3 Peg-Label Black",
+    artist: "Daler mehndi",
+    album: "T-Series Mixtape Punjabi",
+    year: 2012,
+    artwork: "/artwork/abcd2.png",
+    duration: 1,
+    source: "/songs/3 Peg-Label Black.mp3"
+  },
+  {
+    id: 2,
+    name: "Ae Jo Silli Silli-Narazgi",
+    artist: "Daler mehndi",
+    album: "Club 60",
+    year: 2010,
+    artwork: "/artwork/club60.png",
+    duration: 1,
+    source: "/songs/Ae Jo Silli Silli-Narazgi.mp3"
+  },
+  {
+    id: 3,
+    name: "Gallan Goriyan-Aaja Soniye",
+    artist: "Daler mehndi",
+    album: "Creature",
+    year: 2010,
+    artwork: "/artwork/creature.png",
+    duration: 1,
+    source: "/songs/Gallan Goriyan-Aaja Soniye.mp3"
+  },
+  {
+    id: 4,
+    name: "High Rated Gabru-Ban Ja Rani",
+    artist: "Daler mehndi",
+    album: "Kudi Gujrati",
+    year: 2010,
+    artwork: "/artwork/kudi-gujrati.png",
+    duration: 1,
+    source: "/songs/High Rated Gabru-Ban Ja Rani.mp3"
+  },
+  {
+    id: 5,
+    name: "Oh Ho Ho-Soni De Nakhre",
+    artist: "Daler mehndi",
+    album: "Ye Jawani Hai Deewani",
+    year: 2010,
+    artwork: "/artwork/yjhd.png",
+    duration: 1,
+    source: "/songs/Oh Ho Ho-Soni De Nakhre.mp3"
+  },
+  {
+    id: 6,
+    name: "Yaar Bolda-Mukhda Dekh Ke",
+    artist: "Daler mehndi",
+    album: "Youngistan",
+    year: 2010,
+    artwork: "/artwork/youngistan.png",
+    duration: 1,
+    source: "/songs/Yaar Bolda-Mukhda Dekh Ke.mp3"
+  }
+]
 class App extends Component {
   static defaultProps = {
     track: {
-      name: "We Were Young",
-      artist: "Odesza",
-      album: "Summer's Gone",
-      year: 2012,
-      artwork: "/artwork/artwork.jpg",
-      duration: 1,
-      source: "/media/sample.mp3"
+      id: 6,
+      name: "Yaar Bolda-Mukhda Dekh Ke",
+      artist: "Daler mehndi",
+      album: "Youngistan",
+      year: 2010,
+      artwork: "/artwork/youngistan.png",
+      duration: 285,
+      source: "/songs/Yaar Bolda-Mukhda Dekh Ke.mp3"
     }
   }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -21,11 +84,17 @@ class App extends Component {
       totalTime: 0,
       progressWidth: 0,
       value: 0,
-      loop: false
+      loop: false,
+      prevPlay: false,
+      nextPlay: false,
+      shufflePlay: false
     };
     this.togglePlay = this.togglePlay.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.loopPlay = this.loopPlay.bind(this);
+    this.prevPlay = this.prevPlay.bind(this);
+    this.nextPlay = this.nextPlay.bind(this);
+    this.shufflePlay = this.shufflePlay.bind(this);
   }
   togglePlay() {
     let status = this.state.playStatus;
@@ -60,7 +129,7 @@ class App extends Component {
       audio.loop = true;
       audio.load();
       status = true;
-    }else{
+    } else {
       audio.loop = false;
       audio.load();
       status = false;
@@ -74,6 +143,24 @@ class App extends Component {
     timestamp = Math.floor(timestamp);
     this.setState({
       currentTime: timestamp
+    });
+  }
+
+  prevPlay(timestamp) {
+    this.setState({
+      prevPlay: !this.state.prevPlay
+    });
+  }
+
+  nextPlay(timestamp) {
+    this.setState({
+      nextPlay: !this.state.nextPlay
+    });
+  }
+
+  shufflePlay(timestamp) {
+    this.setState({
+      shufflePlay: !this.state.shufflePlay
     });
   }
 
@@ -111,12 +198,12 @@ class App extends Component {
         <div className="Scrubber">
           <div className="Scrubber-Progress" style={{ 'width': this.state.progressWidth + '%' }} />
           <div className="Controls">
-            <div className="material-icons">shuffle</div>
-            <div className="material-icons">skip_previous</div>
+            <div className={this.state.shufflePlay ? 'material-icons active' : 'material-icons'} onClick={this.shufflePlay}>shuffle</div>
+            <div className={this.state.prevPlay ? 'material-icons active' : 'material-icons'} onClick={this.prevPlay}>skip_previous</div>
             <div className="Button" onClick={this.togglePlay}>
               <div className="material-icons">{this.state.playStatus === 'pause' ? 'pause' : 'play_arrow'}</div>
             </div>
-            <div className="material-icons">skip_next</div>
+            <div className={this.state.nextPlay ? 'material-icons active' : 'material-icons'} onClick={this.nextPlay}>skip_next</div>
             <div className={this.state.loop ? 'material-icons active' : 'material-icons'} onClick={this.loopPlay}>repeat</div>
           </div>
           <div className="Timestamps">
