@@ -41,10 +41,11 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
 // However, our output is structured with css, js and media folders.
 // To have this structure working with relative paths, we have to use custom options.
-const extractTextPluginOptions = shouldUseRelativeAssetPaths
-  ? // Making sure that the publicPath goes back to to build folder.
-    { publicPath: Array(cssFilename.split('/').length).join('../') }
-  : {};
+const extractTextPluginOptions = shouldUseRelativeAssetPaths ? // Making sure that the publicPath goes back to to build folder.
+  {
+    publicPath: Array(cssFilename.split('/').length).join('../')
+  } :
+  {};
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
@@ -70,8 +71,8 @@ module.exports = {
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path
-        .relative(paths.appSrc, info.absoluteResourcePath)
-        .replace(/\\/g, '/'),
+      .relative(paths.appSrc, info.absoluteResourcePath)
+      .replace(/\\/g, '/'),
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -90,7 +91,7 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -116,16 +117,14 @@ module.exports = {
       {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
-        use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
-              
-            },
-            loader: require.resolve('eslint-loader'),
+        use: [{
+          options: {
+            formatter: eslintFormatter,
+            eslintPath: require.resolve('eslint'),
+
           },
-        ],
+          loader: require.resolve('eslint-loader'),
+        }, ],
         include: paths.appSrc,
       },
       {
@@ -149,7 +148,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+
               compact: true,
             },
           },
@@ -168,16 +167,14 @@ module.exports = {
           {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(
-              Object.assign(
-                {
+              Object.assign({
                   fallback: {
                     loader: require.resolve('style-loader'),
                     options: {
                       hmr: false,
                     },
                   },
-                  use: [
-                    {
+                  use: [{
                       loader: require.resolve('css-loader'),
                       options: {
                         importLoaders: 1,
@@ -211,6 +208,45 @@ module.exports = {
               )
             ),
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+          },
+          {
+            test: /\.scss$/,
+            include: paths.appSrc,
+            use: [{
+                loader: "style-loader"
+              },
+              {
+                loader: "css-loader",
+                options: {
+                  sourceMap: true,
+                  minimize: true
+                }
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    autoprefixer({
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9', // React doesn't support IE8 anyway
+                      ],
+                      flexbox: 'no-2009',
+                    }),
+                  ],
+                },
+              },
+              {
+                loader: "sass-loader",
+                options: {
+                  // sourceMap: true
+                }
+              }
+            ]
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
@@ -274,7 +310,7 @@ module.exports = {
       },
       mangle: {
         safari10: true,
-      },        
+      },
       output: {
         comments: false,
         // Turned on because emoji and regex is not minified properly using default

@@ -260,7 +260,7 @@ class App extends Component {
                 }}
                   type="range"
                   name="points"
-                  min="0"
+                  min={0}
                   max={this.state.duration} />
               </div>
             </div>
