@@ -71,7 +71,7 @@ class App extends Component {
       album: "Youngistan",
       year: 2010,
       artwork: "/artwork/youngistan.png",
-      duration: 285,
+      duration: null,
       source: "/songs/Yaar Bolda-Mukhda Dekh Ke.mp3"
     }
   }
@@ -90,12 +90,41 @@ class App extends Component {
       shufflePlay: false
     };
     this.togglePlay = this.togglePlay.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
     this.loopPlay = this.loopPlay.bind(this);
     this.prevPlay = this.prevPlay.bind(this);
     this.nextPlay = this.nextPlay.bind(this);
     this.shufflePlay = this.shufflePlay.bind(this);
   }
+  // Seek functionality
+  componentDidMount() {
+    this.slider.value = 0;
+    this.currentTimeInterval = null;
+
+    // Get duration of the song and set it as max slider value
+    this.audio.onloadedmetadata = function () {
+      this.setState({ duration: this.audio.duration });
+    }.bind(this);
+
+    // Sync slider position with song current time
+    this.audio.onplay = () => {
+      this.currentTimeInterval = setInterval(() => {
+        this.slider.value = this.audio.currentTime;
+      }, 500);
+    };
+
+    this.audio.onpause = () => {
+      clearInterval(this.currentTimeInterval);
+    };
+
+    // Seek functionality
+    this.slider.onchange = (e) => {
+      clearInterval(this.currentTimeInterval);
+      this.audio.currentTime = e.target.value;
+    };
+  }
+
+  //  Play/Pause functionality
   togglePlay() {
     let status = this.state.playStatus;
     let audio = document.getElementById('audio');
@@ -116,12 +145,14 @@ class App extends Component {
     });
   }
 
-  handleChange(event) {
-    this.setState({
-      value: event.target.value
-    });
-  }
+  // handleChange(event) {
+  //   this.setState({
+  //     value: event.target.value,
+  //   });
+  //   clearInterval(this.timer);
+  // }
 
+  // Loop functionality
   loopPlay() {
     let audio = document.getElementById('audio');
     let status = this.state.loop;
@@ -175,7 +206,7 @@ class App extends Component {
 
   convertTime(timestamp) {
     let minutes = Math.floor(timestamp / 60);
-    let seconds = timestamp - minutes * 60;
+    let seconds = Math.floor(timestamp - minutes * 60);
     if (seconds < 10) {
       seconds = "0" + seconds;
     }
@@ -214,7 +245,7 @@ class App extends Component {
               <div className="rangeSlider rangeSlider--horizontal">
                 <div className="rangeSlider__fill" style={{ width: this.state.progressWidth + '%' }}></div>
                 <div className="rangeSlider__handle" style={{ left: 'calc(' + this.state.progressWidth + '% - 10px )' }} onChange={this.handleChange}></div>
-                <input
+                {/* <input
                   className="slider rangeSlider__range"
                   id="playtime"
                   type="range"
@@ -223,16 +254,24 @@ class App extends Component {
                   step={1}
                   value={this.state.value}
                   onChange={this.handleChange}
-                />
+                /> */}
+                <input ref={(slider) => {
+                  this.slider = slider
+                }}
+                  type="range"
+                  name="points"
+                  min="0"
+                  max={this.state.duration} />
               </div>
             </div>
             <div className="Time Time--total">
-              {this.convertTime(this.props.track.duration)}
+              {this.convertTime(this.state.duration)}
             </div>
           </div>
-          <audio id="audio">
+          <audio id="audio" ref={(audio) => { this.audio = audio }} src={this.props.track.source} />
+          {/* <audio id="audio" ref={(audio) => { this.audio = audio }}>
             <source src={this.props.track.source} />
-          </audio>
+          </audio> */}
         </div>
       </div>
     );
