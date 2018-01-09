@@ -8,7 +8,7 @@ const track = [
     album: "T-Series Mixtape Punjabi",
     year: 2012,
     artwork: "/artwork/abcd2.png",
-    duration: 1,
+    duration: 215,
     source: "/songs/3 Peg-Label Black.mp3"
   },
   {
@@ -18,7 +18,7 @@ const track = [
     album: "Club 60",
     year: 2010,
     artwork: "/artwork/club60.png",
-    duration: 1,
+    duration: 291,
     source: "/songs/Ae Jo Silli Silli-Narazgi.mp3"
   },
   {
@@ -28,7 +28,7 @@ const track = [
     album: "Creature",
     year: 2010,
     artwork: "/artwork/creature.png",
-    duration: 1,
+    duration: 239,
     source: "/songs/Gallan Goriyan-Aaja Soniye.mp3"
   },
   {
@@ -38,7 +38,7 @@ const track = [
     album: "Kudi Gujrati",
     year: 2010,
     artwork: "/artwork/kudi-gujrati.png",
-    duration: 1,
+    duration: 267,
     source: "/songs/High Rated Gabru-Ban Ja Rani.mp3"
   },
   {
@@ -48,7 +48,7 @@ const track = [
     album: "Ye Jawani Hai Deewani",
     year: 2010,
     artwork: "/artwork/yjhd.png",
-    duration: 1,
+    duration: 241,
     source: "/songs/Oh Ho Ho-Soni De Nakhre.mp3"
   },
   {
@@ -58,7 +58,7 @@ const track = [
     album: "Youngistan",
     year: 2010,
     artwork: "/artwork/youngistan.png",
-    duration: 1,
+    duration: 244,
     source: "/songs/Yaar Bolda-Mukhda Dekh Ke.mp3"
   }
 ]
@@ -79,6 +79,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      track: track,
       playStatus: 'play',
       currentTime: 0,
       totalTime: 0,
@@ -87,10 +88,14 @@ class App extends Component {
       loop: false,
       prevPlay: false,
       nextPlay: false,
-      shufflePlay: false
+      shufflePlay: false,
+      menu: false,
+      playList: false
     };
+
     this.togglePlay = this.togglePlay.bind(this);
-    // this.handleChange = this.handleChange.bind(this);
+    this.menuChange = this.menuChange.bind(this);
+    this.playList = this.playList.bind(this);
     this.loopPlay = this.loopPlay.bind(this);
     this.prevPlay = this.prevPlay.bind(this);
     this.nextPlay = this.nextPlay.bind(this);
@@ -145,12 +150,19 @@ class App extends Component {
     });
   }
 
-  // handleChange(event) {
-  //   this.setState({
-  //     value: event.target.value,
-  //   });
-  //   clearInterval(this.timer);
-  // }
+  menuChange() {
+    this.setState({
+      menu: !this.state.menu,
+      playList: false
+    });
+  }
+
+  playList() {
+    this.setState({
+      menu: false,
+      playList: !this.state.playList
+    });
+  }
 
   // Loop functionality
   loopPlay() {
@@ -217,35 +229,61 @@ class App extends Component {
   render() {
     return (
       <div className="Player">
-        {/* <div className="Background" style={{ 'backgroundImage': 'url(' + this.props.track.artwork + ')' }}></div> */}
-        <div className="Artwork" style={{ 'backgroundImage': 'url(' + this.props.track.artwork + ')' }}></div>
-        <div className="TrackInformation">
-          <div className="Name">{this.props.track.name}</div>
-          <div className="Artist">{this.props.track.artist}</div>
-          <div className="Album">
-            {this.props.track.album} ({this.props.track.year})
-			  	</div>
+        <div className="topbar">
+          <i className="material-icons" onClick={this.menuChange}>menu</i>
+          <i className="material-icons" onClick={this.playList}>queue_music</i>
         </div>
-        <div className="Scrubber">
-          <div className="Scrubber-Progress" style={{ 'width': this.state.progressWidth + '%' }} />
-          <div className="Controls">
-            <div className={this.state.shufflePlay ? 'material-icons active' : 'material-icons'} onClick={this.shufflePlay}>shuffle</div>
-            <div className={this.state.prevPlay ? 'material-icons active' : 'material-icons'} onClick={this.prevPlay}>skip_previous</div>
-            <div className="Button" onClick={this.togglePlay}>
-              <div className="material-icons">{this.state.playStatus === 'pause' ? 'pause' : 'play_arrow'}</div>
-            </div>
-            <div className={this.state.nextPlay ? 'material-icons active' : 'material-icons'} onClick={this.nextPlay}>skip_next</div>
-            <div className={this.state.loop ? 'material-icons active' : 'material-icons'} onClick={this.loopPlay}>repeat</div>
+        <div className={this.state.menu ? 'setting show' : 'setting'}>
+          <ul>
+            <li>Setting - 1</li>
+            <li>Setting - 2</li>
+            <li>Setting - 3</li>
+            <li>Setting - 4</li>
+            <li>Setting - 5</li>
+            <li>Setting - 6</li>
+          </ul>
+        </div>
+        <div className={this.state.playList ? 'playList show' : 'playList'}>
+          <ul id="plList">
+            {this.state.track.map(track =>
+              <li key={track.id} className="plItem">
+                <div className="plNum">{track.id}.</div>
+                <div className="plTitle">{track.name}</div>
+                <div className="plLength">{this.convertTime(track.duration)}</div>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div className="wrap">
+          <div className="Artwork" style={{ 'backgroundImage': 'url(' + this.props.track.artwork + ')' }}></div>
+          <div className="TrackInformation">
+            <div className="Name">{this.props.track.name}</div>
+            <div className="Artist">{this.props.track.artist}</div>
+            <div className="Album">
+              {this.props.track.album} ({this.props.track.year})
+			  	</div>
           </div>
-          <div className="Timestamps">
-            <div className="Time Time--current">
-              {this.convertTime(this.state.currentTime)}
+          <div className="Scrubber">
+            <div className="Scrubber-Progress" style={{ 'width': this.state.progressWidth + '%' }} />
+            <div className="Controls">
+              <div className={this.state.shufflePlay ? 'material-icons active' : 'material-icons'} onClick={this.shufflePlay}>shuffle</div>
+              <div className={this.state.prevPlay ? 'material-icons active' : 'material-icons'} onClick={this.prevPlay}>skip_previous</div>
+              <div className="Button" onClick={this.togglePlay}>
+                <div className="material-icons">{this.state.playStatus === 'pause' ? 'pause' : 'play_arrow'}</div>
+              </div>
+              <div className={this.state.nextPlay ? 'material-icons active' : 'material-icons'} onClick={this.nextPlay}>skip_next</div>
+              <div className={this.state.loop ? 'material-icons active' : 'material-icons'} onClick={this.loopPlay}>repeat</div>
             </div>
-            <div className="playTime">
-              <div className="rangeSlider rangeSlider--horizontal">
-                <div className="rangeSlider__fill" style={{ width: this.state.progressWidth + '%' }}></div>
-                <div className="rangeSlider__handle" style={{ left: 'calc(' + this.state.progressWidth + '% - 10px )' }} onChange={this.handleChange}></div>
-                {/* <input
+            <div className="Timestamps">
+              <div className="Time Time--current">
+                {this.convertTime(this.state.currentTime)}
+              </div>
+              <div className="playTime">
+                <div className="rangeSlider rangeSlider--horizontal">
+                  <div className="rangeSlider__fill" style={{ width: this.state.progressWidth + '%' }}></div>
+                  <div className="rangeSlider__handle" style={{ left: 'calc(' + this.state.progressWidth + '% - 10px )' }} onChange={this.handleChange}></div>
+                  {/* <input
                   className="slider rangeSlider__range"
                   id="playtime"
                   type="range"
@@ -255,23 +293,24 @@ class App extends Component {
                   value={this.state.value}
                   onChange={this.handleChange}
                 /> */}
-                <input ref={(slider) => {
-                  this.slider = slider
-                }}
-                  type="range"
-                  name="points"
-                  min={0}
-                  max={this.state.duration} />
+                  <input ref={(slider) => {
+                    this.slider = slider
+                  }}
+                    type="range"
+                    name="points"
+                    min={0}
+                    max={this.state.duration} />
+                </div>
+              </div>
+              <div className="Time Time--total">
+                {this.convertTime(this.state.duration)}
               </div>
             </div>
-            <div className="Time Time--total">
-              {this.convertTime(this.state.duration)}
-            </div>
-          </div>
-          <audio id="audio" ref={(audio) => { this.audio = audio }} src={this.props.track.source} />
-          {/* <audio id="audio" ref={(audio) => { this.audio = audio }}>
+            <audio id="audio" ref={(audio) => { this.audio = audio }} src={this.props.track.source} />
+            {/* <audio id="audio" ref={(audio) => { this.audio = audio }}>
             <source src={this.props.track.source} />
           </audio> */}
+          </div>
         </div>
       </div>
     );

@@ -30,6 +30,7 @@ body {
   box-shadow: 0 5px 10px -5px rgba($black, 1);
   height: 667px;
   width: 400px;
+  position: relative;
   .Background {
     width: 150%;
     height: 150%;
@@ -39,8 +40,7 @@ body {
     background-position: center center;
     opacity: .2;
     filter: blur(10px);
-  }
-  // ArtWork
+  } // ArtWork
   .Artwork {
     width: 100%;
     height: 50%;
@@ -89,8 +89,7 @@ body {
       right: 0;
       bottom: 0;
       left: 0;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, .15), rgba(0, 0, 0, .25)),
-      linear-gradient(left top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
+      background: linear-gradient(to bottom, rgba(255, 255, 255, .15), rgba(0, 0, 0, .25)), linear-gradient(left top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
     }
     .Scrubber-Progress {
       @include generate-gradient($orange);
@@ -100,17 +99,16 @@ body {
       position: absolute;
       opacity: .4;
     }
-  }
-  // Time Stamps
+  } // Time Stamps
   .Timestamps {
     display: flex;
     padding: 0 20px;
     width: 100%;
     justify-content: center;
-    height: 20%;
+    height: 30%;
     align-items: center;
     position: relative;
-    z-index: 5;    
+    z-index: 5;
     .Time {
       font-size: 12px;
       display: flex;
@@ -125,7 +123,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80%;
+    height: 70%;
     z-index: 5;
     position: relative;
     &>.material-icons {
@@ -168,7 +166,7 @@ body {
 
 // Range Slider
 .rangeSlider,
-.rangeSlider__fill{
+.rangeSlider__fill {
   display: block;
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
@@ -189,28 +187,28 @@ body {
   }
 }
 
-.rangeSlider{
+.rangeSlider {
   background: #e6e6e6;
   position: relative;
 }
 
-.rangeSlider--horizontal{
+.rangeSlider--horizontal {
   height: 5px;
   width: 100%;
 }
 
-.rangeSlider--vertical{
+.rangeSlider--vertical {
   width: 20px;
   min-height: 150px;
   max-height: 100%;
   height: 100%;
 }
 
-.rangeSlider--disabled{
+.rangeSlider--disabled {
   opacity: .4;
 }
 
-.rangeSlider__fill{
+.rangeSlider__fill {
   background: #ff4700;
   transition: width 1s cubic-bezier(0.46, 0.03, 0.52, 0.96);
   .rangeSlider--horizontal & {
@@ -223,7 +221,7 @@ body {
   }
 }
 
-.rangeSlider__handle{
+.rangeSlider__handle {
   background: white;
   border: 1px solid #ccc;
   cursor: pointer;
@@ -263,6 +261,134 @@ body {
   }
 }
 
-input[type="range"]:focus+ .rangeSlider .rangeSlider__handle {
+input[type="range"]:focus+.rangeSlider .rangeSlider__handle {
   box-shadow: 0 0 8px rgba(#ff00ff, .9);
+}
+
+.topbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 5px 10px -5px #121212;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #00bcd4;
+  height: 60px;
+  align-items: center;
+  i {
+    cursor: pointer;
+  }
+}
+
+.wrap {
+  height: calc(100% - 60px);
+  margin-top: 60px;
+}
+
+// Settings Right
+.setting {
+  height: calc(100% - 60px);
+  width: 100%;
+  margin-top: 60px;
+  margin-left: -100%;
+  position: absolute;
+  z-index: 55;
+  transition: all 500ms ease-in;
+  &.show {
+    margin-left: 0;
+  }  
+  ul {
+    list-style: none;
+    margin: 0;
+    background: #00bcd4;
+    height: 100%;
+    padding: 0;
+    li {
+      cursor: pointer;
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #05acc1;
+      &:hover {
+        background-color:#05acc1;
+      }
+    }
+  }
+}
+
+// Play list Left
+.playList {
+  height: calc(100% - 60px);
+  width: 100%;
+  margin-top: 60px;
+  background: #00bcd4;
+  transition: all 500ms ease-in;
+  margin-left: 100%;
+  position: absolute;
+  z-index: 55;
+  &.show {
+    margin-left: 0;
+  }
+}
+
+#plList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    cursor: pointer;
+    margin: 0;
+    padding: 21px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #05acc1;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    &>div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .plNum {
+      width: 12%
+    }
+    .plTitle {
+      width: 70%;
+      justify-content: left;
+    }
+    .plLength {
+      width: 15%;
+    }
+    .plSel {
+      background-color: rgba(0, 0, 0, 0.1);
+      color: #fff;
+      cursor: default !important;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: #fff;
+        cursor: default !important;
+      }
+    }
+  }
+}
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
 }
